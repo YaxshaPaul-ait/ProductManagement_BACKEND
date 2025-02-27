@@ -2,9 +2,13 @@ import express, { Request } from 'express';
 import multer, { FileFilterCallback, Multer } from 'multer';
 import {
   createProduct,
+  deleteProduct,
   getProduct,
+  getProductByDate,
   getProductByID,
   getProductByName,
+  getProductStock,
+  updateProduct,
 } from '../controller/productsController';
 import { authenticate } from '../config/auth';
 
@@ -29,6 +33,10 @@ router.post(
 );
 router.get('/products', authenticate, getProduct);
 router.get('/products/:id', authenticate, getProductByID);
-router.get('/productsname', authenticate, getProductByName);
+router.get('/products_name', authenticate, getProductByName);
+router.get('/products_date',authenticate,getProductByDate);
+router.get('/product_stock',authenticate, getProductStock)
+router.put('/product/:id', authenticate, updateProduct);
+router.delete('/product/:id',authenticate,deleteProduct)
 
 export default router;

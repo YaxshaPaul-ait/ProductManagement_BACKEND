@@ -96,6 +96,74 @@ namespace Products {
         res.status(500).json({ message: 'Error fetching products.' });
       }
     }
+
+    public async getProductByDate(req: Request, res: Response): Promise<any> {
+      try {
+        const date = req.query.date as string;
+        if (!date) {
+          return res.status(400).json({ message: 'Date is required.' });
+        }
+        const products = await this.productSchema
+          .find({ createdAt: { $gte: new Date(date) } })
+          .select('name price isAvailable')
+          .lean();
+        if (products.length === 0) {
+          return res.status(404).json({ message: 'No products found.' });
+        }
+        res
+          .status(200)
+          .json({ message: 'Products fetched successfully.', data: products });
+      } catch (err: any) {
+        console.error(err);
+        res.status(500).json({ message: 'Error fetching products.' });
+      }
+    }
+
+    public async getProductStock(req: Request, res: Response): Promise<any> {
+      try {
+        const products = await this.productSchema
+          .find({ isAvailable: true })
+          .select('name price isAvailable')
+          .lean();
+        res.status(200).json({
+          message: 'Available products fetched successfully.',
+          data: products,
+        });
+      } catch (err: any) {
+        console.error(err);
+        res.status(500).json({ message: 'Error fetching available products.' });
+      }
+    }
+    public async updateProduct(req: Request, res: Response): Promise<any> {
+      try {
+        const id = req.params.id;
+        const product = await this.productSchema.findById(id);
+        if (!product) {
+          return res.status(404).json({ message: 'Product not found.' });
+        }
+        const { name, price, isAvailable } = req.body;
+        product.set({ name, price, isAvailable });
+        await product.save();
+        res.status(200).json({ message: 'Product updated successfully.' });
+      } catch (err: any) {
+        console.error(err);
+        res.status(500).json({ message: 'Error updating product.' });
+      }
+    }
+
+    public async deleteProduct(req: Request, res: Response): Promise<any> {
+      try {
+        const id = req.params.id;
+        const product = await this.productSchema.findByIdAndDelete(id);
+        if (!product) {
+          return res.status(404).json({ message: 'Product not found.' });
+        }
+        res.status(200).json({ message: 'Product deleted successfully.' });
+      } catch (err: any) {
+        console.error(err);
+        res.status(500).json({ message: 'Error deleting product.' });
+      }
+    }
   }
 }
 
@@ -124,4 +192,32 @@ export const getProductByName = async (
   res: Response
 ): Promise<any> => {
   return product.getProductByName(req, res);
+};
+
+export const getProductByDate = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  return product.getProductByDate(req, res);
+};
+
+export const getProductStock = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  return product.getProductStock(req, res);
+};
+
+export const updateProduct = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  return product.updateProduct(req, res);
+};
+
+export const deleteProduct = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  return product.deleteProduct(req, res);
 };
