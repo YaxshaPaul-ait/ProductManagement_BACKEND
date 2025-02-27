@@ -29,6 +29,6 @@ router.post(
 );
 router.get('/products', authenticate, getProduct);
 router.get('/products/:id', authenticate, getProductByID);
-router.get('/products', authenticate, getProductByName);
+router.get('/productsname', authenticate, getProductByName);
 
 export default router;

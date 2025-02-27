@@ -77,20 +77,20 @@ export const getProductByName = async (
       return res.status(400).json({ message: 'Name is required.' });
     }
 
-    const products = await productSchema
-      .find({ name: { $regex: name, $options: 'i' } })
+    const product = await productSchema
+      .findOne({ name })
       .select('name price isAvailable');
 
-    if (products.length === 0) {
-      return res.status(404).json({ message: 'No products found.' });
+    if (!product) {
+      return res.status(404).json({ message: 'No product found.' });
     }
 
     res
-      .status(200)  
-      .json({ message: 'Products fetched successfully.', data: products });
+      .status(200)
+      .json({ message: 'Product fetched successfully.', data: product });
   } catch (err: any) {
     console.error(err);
-    res.status(500).json({ message: 'Error fetching products.' });
+    res.status(500).json({ message: 'Error fetching product.' });
   }
 };
 
