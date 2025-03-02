@@ -119,6 +119,9 @@ namespace Products {
       }
     }
 
+    // the createdAt is in the format 
+    // (2025-02-27T16:50:50.587+00:00), the user give it as 27-02-2025 as params
+
     public async getProductStock(req: Request, res: Response): Promise<any> {
       try {
         const products = await this.productSchema

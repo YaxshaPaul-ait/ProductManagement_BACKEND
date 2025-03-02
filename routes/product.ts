@@ -28,15 +28,14 @@ const router = express.Router();
 router.post(
   '/products',
   upload.array('images', 12),
-  authenticate,
   createProduct
 );
-router.get('/products', authenticate, getProduct);
-router.get('/products/:id', authenticate, getProductByID);
-router.get('/products_name', authenticate, getProductByName);
-router.get('/products_date',authenticate,getProductByDate);
-router.get('/product_stock',authenticate, getProductStock)
-router.put('/product/:id', authenticate, updateProduct);
+router.get('/products',  getProduct);
+router.get('/products/:id',  getProductByID);
+router.get('/products_name',  getProductByName);
+router.get('/products_date',getProductByDate);
+router.get('/product_stock', getProductStock)
+router.put('/product/:id',  updateProduct);
 router.delete('/product/:id',authenticate,deleteProduct)
 
 export default router;
